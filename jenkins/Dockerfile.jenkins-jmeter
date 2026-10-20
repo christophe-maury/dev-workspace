@@ -1,0 +1,23 @@
+FROM jenkins/jenkins:lts-jdk17
+
+USER root
+
+ARG JMETER_VERSION=5.6.3
+ARG JMETER_HOME=/opt/jmeter
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates unzip fontconfig \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN curl -fsSL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${JMETER_VERSION}.tgz \
+    -o /tmp/jmeter.tgz \
+    && mkdir -p /opt \
+    && tar -xzf /tmp/jmeter.tgz -C /opt \
+    && mv /opt/apache-jmeter-${JMETER_VERSION} ${JMETER_HOME} \
+    && rm -f /tmp/jmeter.tgz \
+    && ln -s ${JMETER_HOME}/bin/jmeter /usr/local/bin/jmeter
+
+ENV JMETER_HOME=${JMETER_HOME}
+ENV PATH="${JMETER_HOME}/bin:${PATH}"
+
+USER jenkins
