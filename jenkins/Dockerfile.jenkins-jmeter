@@ -19,5 +19,7 @@ RUN curl -fsSL https://archive.apache.org/dist/jmeter/binaries/apache-jmeter-${J
 
 ENV JMETER_HOME=${JMETER_HOME}
 ENV PATH="${JMETER_HOME}/bin:${PATH}"
+COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+RUN jenkins-plugin-cli --plugin-file /usr/share/jenkins/ref/plugins.txt
 
 USER jenkins
